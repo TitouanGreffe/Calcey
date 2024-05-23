@@ -127,3 +127,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# large datasets
+data/NC_background_pest
+data/NC_background_water
+data/Qin_2024_Irrigation
