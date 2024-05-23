@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2024-05-23T14:26:20.619Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0" etag="It6MkkXdQHIUjTAgIHLB" version="24.4.6" type="github">
+<mxfile host="app.diagrams.net" modified="2024-05-23T14:34:06.666Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0" etag="sWeujmZcXmXV6SPssnEs" version="24.4.6" type="github">
   <diagram name="Page-1" id="pc6PM3e2iaqK9xveRkoi">
     <mxGraphModel dx="2140" dy="1842" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -16,7 +16,7 @@
         <mxCell id="SHC5wfu7n01j2c97J29x-4" value="1 kg of crop product" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="1020" y="270" width="160" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="SHC5wfu7n01j2c97J29x-5" value="&lt;div&gt;pest A to soil&lt;/div&gt;&lt;div&gt;pest A to air&lt;/div&gt;&lt;div&gt;pest B to soil&lt;/div&gt;&lt;div&gt;....&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;N2O emissions&lt;/div&gt;&lt;div&gt;NH3 emissions&lt;/div&gt;&lt;div&gt;NO3- emissions&lt;br&gt;&lt;/div&gt;&lt;div&gt;CO2 emissions&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="SHC5wfu7n01j2c97J29x-5" value="&lt;div&gt;pest A to soil&lt;/div&gt;&lt;div&gt;pest A to air&lt;/div&gt;&lt;div&gt;pest B to soil&lt;/div&gt;&lt;div&gt;....&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;N2O emissions&lt;/div&gt;&lt;div&gt;NH3 emissions&lt;/div&gt;&lt;div&gt;NO3- emissions&lt;br&gt;&lt;/div&gt;&lt;div&gt;CO2 emissions&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;water emissions to air&lt;/div&gt;&lt;div&gt;water emissions to water&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1020" y="380" width="160" height="250" as="geometry" />
         </mxCell>
         <mxCell id="SHC5wfu7n01j2c97J29x-6" value="Mandatory list" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
@@ -84,6 +84,9 @@
         </mxCell>
         <mxCell id="SHC5wfu7n01j2c97J29x-36" value="crop available in pest background" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="440" y="-40" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="SHC5wfu7n01j2c97J29x-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="SHC5wfu7n01j2c97J29x-38" target="SHC5wfu7n01j2c97J29x-5">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="SHC5wfu7n01j2c97J29x-38" value="function compartmentalize_pest_output" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fontStyle=0;startSize=30;" vertex="1" parent="1">
           <mxGeometry x="780" y="120" width="120" height="80" as="geometry" />
