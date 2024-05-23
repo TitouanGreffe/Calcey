@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2024-05-23T14:34:06.666Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0" etag="sWeujmZcXmXV6SPssnEs" version="24.4.6" type="github">
+<mxfile host="app.diagrams.net" modified="2024-05-23T14:37:03.230Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0" etag="tMhoC_wUdJfgayUT5MRA" version="24.4.6" type="github">
   <diagram name="Page-1" id="pc6PM3e2iaqK9xveRkoi">
-    <mxGraphModel dx="2140" dy="1842" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1577" dy="1553" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -90,6 +90,9 @@
         </mxCell>
         <mxCell id="SHC5wfu7n01j2c97J29x-38" value="function compartmentalize_pest_output" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fontStyle=0;startSize=30;" vertex="1" parent="1">
           <mxGeometry x="780" y="120" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="SHC5wfu7n01j2c97J29x-40" value="function map_crop_fert" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fontStyle=0;startSize=30;" vertex="1" parent="1">
+          <mxGeometry x="370" y="180" width="120" height="80" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
