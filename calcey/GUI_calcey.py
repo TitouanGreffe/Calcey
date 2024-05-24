@@ -1,10 +1,10 @@
 import tkinter as tk
 from tkinter import *
-from tkinter import ttk
 import tkintermapview
 import customtkinter
 from tkcalendar import DateEntry
 import pandas as pd
+from customtkinter import CTkComboBox
 
 
 
@@ -70,26 +70,38 @@ map_widget.add_left_click_map_command(get_coordinates)
 
 #dropdowns---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #dropdown_unit
-Fertilizer1_unit = customtkinter.CTkOptionMenu(frame2, width = 100, values=[' ','kg/ha'] )  
-Fertilizer2_unit = customtkinter.CTkOptionMenu(frame2, width = 100, values=[' ','kg/ha']) 
-Fertilizer3_unit = customtkinter.CTkOptionMenu(frame2, width = 100, values=[' ','kg/ha']) 
-yield_drymass_unit = customtkinter.CTkOptionMenu(frame2, width = 100, values=[' ','kg/ha']) 
-irrigation_unit = customtkinter.CTkOptionMenu(frame2, width = 100, values =[' ','m^3/ha'] )  
-diesel_consumed_unit = customtkinter.CTkOptionMenu(frame2, width = 100, values = [' ','l/ha']) 
+Fertilizer1_unit = CTkComboBox(frame2, width = 100, values=[' ','kg/ha'] ) 
+Fertilizer1_unit.set('Please select (optional)') 
+Fertilizer2_unit = CTkComboBox(frame2, width = 100, values=[' ','kg/ha']) 
+Fertilizer2_unit.set('Please select (optional)')
+Fertilizer3_unit = CTkComboBox(frame2, width = 100, values=[' ','kg/ha']) 
+Fertilizer3_unit.set('Please select (optional)')
+yield_drymass_unit = CTkComboBox(frame2, width = 100, values=[' ','kg/ha']) 
+yield_drymass_unit.set('Please select (optional)')
+irrigation_unit = CTkComboBox(frame2, width = 100, values =[' ','m^3/ha'] )  
+irrigation_unit.set('Please select (optional)')
+diesel_consumed_unit = CTkComboBox(frame2, width = 100, values = [' ','l/ha']) 
+diesel_consumed_unit.set('Please select (optional)')
 
 #dropdown_fertilizer
 Fert=(' ','Ammonium Sulphate', 'Ammoniumchloride', 'Calcium Ammonium Nitrate', 'Calcium Nitrate', 'Urea', 'Single superphosphate', 'Rock Phosphate', 'Potassium chloride', 'Potassium Sulphate', '15-15-15', '10-26-26')
-Fert1 = customtkinter.CTkOptionMenu(frame2, width = 200, values=Fert) 
-Fert2 = customtkinter.CTkOptionMenu(frame2, width = 200, values=Fert) 
-Fert3 = customtkinter.CTkOptionMenu(frame2, width = 200, values=Fert)  
+Fert1 = CTkComboBox(frame2, width = 200, values=Fert,)
+Fert1.set('Please select (optional)') 
+Fert2 = CTkComboBox(frame2, width = 200, values=Fert) 
+Fert2.set('Please select (optional)') 
+Fert3 = CTkComboBox(frame2, width = 200, values=Fert)  
+Fert3.set('Please select (optional)') 
 
 #dropdown yield
 yiel=(' ','drymass', 'freshmass')
-yield1 = customtkinter.CTkOptionMenu(frame2, width = 200, values = yiel) 
+yield1 = CTkComboBox(frame2, width = 200, values = yiel) 
+yield1.set('Please select (optional)')
 
 #dropdown crop
-#df_crops.insert(0, "")
-crop1 = customtkinter.CTkOptionMenu(frame2, width = 200, values = list(df_crops['List_UI'])) 
+#df_crops.insert(0, ["Please select"])
+crop1 = CTkComboBox(frame2, width = 200, values = list(df_crops['List_UI']))
+crop1.set('Please select (optional)')
+ 
 
 
 # Create a dictionary to store the widgets
@@ -231,7 +243,7 @@ def getInput():
     
     print(user_data)
    
-customtkinter.CTkButton(frame2,height = 90, width=110, text = "submit",
+customtkinter.CTkButton(frame2,height = 90, width=110, text = "submit",font=customtkinter.CTkFont(family="Circular Std Black",size=20, weight="bold"),
            command = getInput).grid(column = 0,row = 13,columnspan= 5, sticky = W)
 
 root.mainloop()
