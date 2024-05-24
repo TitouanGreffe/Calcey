@@ -1,10 +1,5 @@
+#Testing as a entire function
 import pandas as pd
-#This block is used to calculate emissions from pesticide application.
-pesticide_quantity_dict = {
-    'pesticide': ['DDT', 'Copper', '2,4-DB'],
-    'value': [0.206, 0.250, 0.250]
-}
-pesticide_quantity_df = pd.DataFrame(pesticide_quantity_dict)
 
 def calculate_pest_emissions(pest_name, amount):
     #pesticide_quantity_df = pesticide_quantity_df
@@ -17,7 +12,7 @@ def calculate_pest_emissions(pest_name, amount):
     results = []
 
     # Iterate through the DataFrame rows
-#for index, row in pesticide_quantity_df.iterrows():
+    #for index, row in pesticide_quantity_df.iterrows():
     #pest_name = row['pesticide']
     #pest_quantity = row['value']
         
@@ -37,7 +32,4 @@ def calculate_pest_emissions(pest_name, amount):
     df_emissions.set_index('pesticide_name', inplace=True)
     return df_emissions
    
-
 calculate_pest_emissions('DDT', amount=1)
-
-

@@ -57,5 +57,10 @@ def calculate_emissions(user_input_fert_kg_N, user_input_fert_kg_P):
     
     return pd.DataFrame(emissions_data)
 
+# Test the function with appropriate inputs
+df_emissions = calculate_emissions(user_input_fert_kg_N=2, user_input_fert_kg_P=1)
+
+# Display the result
+print(df_emissions)
 
 calculate_emissions(user_input_fert_kg_N=1, user_input_fert_kg_P=5)
