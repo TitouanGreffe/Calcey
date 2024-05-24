@@ -22,6 +22,7 @@ class calcey:
         location = geolocator.reverse(lat_str + "," + lon_str)
         address = location.address
         data_address = address.split(',')
+        print("data_address:" , data_address)
         country = data_address[len(data_address)-1].lstrip().rstrip()
         return(country)
     
@@ -29,6 +30,7 @@ class calcey:
     def ISO3_country_from_coordinates(self, Latitude: float,Longitude:float):
         country = self.country_from_coordinates(Latitude, Longitude)
         country_ISO3 = coco.convert(country,to='ISO3')
+        print(country, country_ISO3)
         return(country_ISO3)
     
     
@@ -54,7 +56,7 @@ class calcey:
         
     def country_fertilizer_proxy_location(self, Latitude: float, Longitude: float):
         country_ISO3 = self.ISO3_country_from_coordinates(Latitude, Longitude)
-        country_mapping_file = pd.read_excel("../data/Fertilizer_mapping_country.xlsx", sheet_name = "Mapping_nearest_neighbor", index_col = 2)
+        country_mapping_file = pd.read_excel("../data/Fertilizer_mapping_country.xlsx", sheet_name = "Mapping_nearest_neighbor", index_col = 0)
         country_proxy_ISO3 = country_mapping_file.loc[country_ISO3,"iso3_nearest"][0]
         return(country_proxy_ISO3)
     
@@ -75,6 +77,7 @@ class calcey:
         
         # get country proxy in ISO 3 format
         country_proxy_ISO3 = self.country_fertilizer_proxy_location(Latitude, Longitude)
+        print(country_proxy_ISO3)
         
         try:
             return(df_amount_fert_crop_country.loc[(country_proxy_ISO3,crop)])
@@ -204,7 +207,9 @@ class calcey:
         df['pesticide_name'] = df['pesticide_name'].str.rstrip('.nc')
         df = df.drop(['filename', 'crop_name'], axis=1)
         df = df.loc[:, ['pesticide_name', 'value']]
-    
-        return df
+
+        pest_total = df['value'].sum()
+        
+        return df, pest_total
 
 
