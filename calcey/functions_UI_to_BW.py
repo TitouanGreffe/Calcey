@@ -213,3 +213,27 @@ class calcey:
         return df, pest_total
 
 
+    def create_final_dataframe(self, yield_data, fert_data, water_data, pest_data, pest_total):
+        # yield data
+        yield_in_kgperha = yield_data / 10
+
+        # fert data
+        series = fert_data.drop('Country')
+        df_fert = pd.DataFrame({
+             'Parameter': series.index,
+             'Value': series.values
+        })
+        df_fert['Value'] = df_fert['Value'] / yield_in_kgperha
+
+        # water_data
+        water_m3perkg = water_data.at[0, 'value']
+
+        # pest data
+        pest_data['value'] = pest_data['value'] / yield_in_kgperha
+
+        # pest total
+        pest_kgperkg = pest_total / yield_in_kgperha
+
+        return yield_in_kgperha, df_fert, water_m3perkg, pest_data, pest_kgperkg
+            
+
