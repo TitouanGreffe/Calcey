@@ -71,6 +71,7 @@ class calcey:
             print("Please enter a valid float value")
 
     def country_from_coordinates(self, Latitude: float, Longitude: float):
+        """This function gets the country name from the coordinates given"""
         lat_str = str(Latitude)
         lon_str = str(Longitude)
         geolocator = Photon(user_agent="measurements")
@@ -81,7 +82,7 @@ class calcey:
         return(country)
 
     def get_background_data_yield(self, input_lat: float, input_lon: float, crop: str):
-        # get yield data
+        """get yield data"""
         df = pd.read_csv("../data/FAOSTAT_data_yield.csv")
         country = self.country_from_coordinates(Latitude=input_lat, Longitude=input_lon)
         FAO_yield = float(df.loc[(df['Area'] == country) & (df['Year'] == 2022) & (df['Item'] == crop), 'Value'].iloc[0])
@@ -166,7 +167,7 @@ class calcey:
     
     
     def get_background_data_yield(self, input_lat: float, input_lon: float, crop: str):
-        # get yield data
+        """Get yield data"""
         df = pd.read_csv("../data/FAOSTAT_data_yield.csv")
         country = self.country_from_coordinates(Latitude=input_lat, Longitude=input_lon)
         FAO_yield = float(df.loc[(df['Area'] == country) & (df['Year'] == 2022) & (df['Item'] == crop), 'Value'].iloc[0])
@@ -315,7 +316,10 @@ class calcey:
 
 
     def calculate_pest_emissions(self,pest_name, amount):
-        # Emission factors
+        """This function is used to calculate emissions from pesticide application, using default emissions factors. 
+        pest_name is the name of the pesticide that either comes from the user interface or if the user does not specify, 
+        it will take names from the background database. 
+        Amount represents the quantity specified by the user interface or from the background database."""
         EF_pest_soil = 0.9
         EF_pest_air = 0.1
         # Initialize an empty list to store the results
@@ -330,13 +334,14 @@ class calcey:
         'pest_em_air': pest_em_air
         })
 
-        # Convert the results list to a DataFrame
+        #Convert the results list to a DataFrame
         self.df_emissions = pd.DataFrame(results)
         self.df_emissions.set_index('pesticide_name', inplace=True)
         return self.df_emissions
 
 
     def dataframe_exchanges(self, latitude, longitude, crop, yield_ = None, n_fert_input=None, p2o5_fert_input=None, k2o_fert_input=None):
+        """This function creates all the exchanges for all inputs and outputs, from the data specified in the user interface, e.g., lattitude, longitude, crop, yield, and fertilizer inputs."""
         df = pd.read_excel("Mapping_data_Calcey.xlsx", sheet_name = "Mapping_flows_ecoinvent", index_col =0) ## adjust path before "Mapping_data_Calcey.xlsx"
         all_inputs = list(set(df.index))
         all_inputs = [x for x in all_inputs if type(x) != float]
@@ -376,6 +381,7 @@ class calcey:
         return(df_output)
 
     def generate_edges_to_product(self):
+        """This function creates all the edges for all the exchanges from the function above, dataframe_exchanges."""
         for name in list(mapping_flows_uuid.index):
             self.create_edge(df_output.loc[name,"Amount"], name) ## add self.
 
