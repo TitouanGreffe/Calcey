@@ -9,7 +9,7 @@ from customtkinter import CTkComboBox
 
 
 root = customtkinter.CTk()
-root.geometry(f"{1250}x{750}")
+root.geometry(f"{1400}x{800}")
 root.title("calcey")
 customtkinter.set_appearance_mode("Dark")
 
@@ -29,26 +29,8 @@ label = customtkinter.CTkLabel(frame3, text="Welcome to calcey!",  width=300, he
 label.pack()
 
 
-def search_event(event=None):
-        map_widget.set_address(entry.get())
-
-entry = customtkinter.CTkEntry(frame2,placeholder_text="type address")
-entry.grid(row=12, column=4, sticky="e", padx=(15, 0), pady=5)
-entry.bind("<Return>", search_event)
-
-button_5 = customtkinter.CTkButton(frame2,
-                                                text="Search",
-                                                width=90,
-                                                command=search_event)
-button_5.grid(row=13, column=4, sticky="e", padx=(12, 0), pady=5)
-
-def search_event(self, event=None):
-        self.map_widget.set_address(self.entry.get())
 
 
-
-
-# Create the search bar entry widget
 
 
 #getting coordinates
@@ -70,38 +52,37 @@ map_widget.add_left_click_map_command(get_coordinates)
 
 #dropdowns---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #dropdown_unit
-Fertilizer1_unit = CTkComboBox(frame2, width = 100, values=[' ','kg/ha'] ) 
-Fertilizer1_unit.set('Please select (optional)') 
-Fertilizer2_unit = CTkComboBox(frame2, width = 100, values=[' ','kg/ha']) 
-Fertilizer2_unit.set('Please select (optional)')
-Fertilizer3_unit = CTkComboBox(frame2, width = 100, values=[' ','kg/ha']) 
-Fertilizer3_unit.set('Please select (optional)')
-yield_drymass_unit = CTkComboBox(frame2, width = 100, values=[' ','kg/ha']) 
-yield_drymass_unit.set('Please select (optional)')
-irrigation_unit = CTkComboBox(frame2, width = 100, values =[' ','m^3/ha'] )  
-irrigation_unit.set('Please select (optional)')
-diesel_consumed_unit = CTkComboBox(frame2, width = 100, values = [' ','l/ha']) 
-diesel_consumed_unit.set('Please select (optional)')
+Fertilizer1_unit = CTkComboBox(frame2, width = 200, values=[' ','kg/ha'] ) 
+#Fertilizer1_unit.set('Please select (optional)') 
+Fertilizer2_unit = CTkComboBox(frame2, width = 200, values=[' ','kg/ha']) 
+#Fertilizer2_unit.set('Please select (optional)')
+Fertilizer3_unit = CTkComboBox(frame2, width = 200, values=[' ','kg/ha']) 
+#Fertilizer3_unit.set('Please select (optional)')
+yield_drymass_unit = CTkComboBox(frame2, width = 200, values=[' ','kg/ha']) 
+#yield_drymass_unit.set('Please select (optional)')
+irrigation_unit = CTkComboBox(frame2, width = 200, values =[' ','m^3/ha'] )  
+#irrigation_unit.set('Please select (optional)')
+diesel_consumed_unit = CTkComboBox(frame2, width = 200, values = [' ','l/ha']) 
+#diesel_consumed_unit.set('Please select (optional)')
 
 #dropdown_fertilizer
 Fert=(' ','Ammonium Sulphate', 'Ammoniumchloride', 'Calcium Ammonium Nitrate', 'Calcium Nitrate', 'Urea', 'Single superphosphate', 'Rock Phosphate', 'Potassium chloride', 'Potassium Sulphate', '15-15-15', '10-26-26')
 Fert1 = CTkComboBox(frame2, width = 200, values=Fert,)
-Fert1.set('Please select (optional)') 
+#Fert1.set('Please select (optional)') 
 Fert2 = CTkComboBox(frame2, width = 200, values=Fert) 
-Fert2.set('Please select (optional)') 
+#Fert2.set('Please select (optional)') 
 Fert3 = CTkComboBox(frame2, width = 200, values=Fert)  
-Fert3.set('Please select (optional)') 
+#Fert3.set('Please select (optional)') 
 
 #dropdown yield
 yiel=(' ','drymass', 'freshmass')
 yield1 = CTkComboBox(frame2, width = 200, values = yiel) 
-yield1.set('Please select (optional)')
+#yield1.set('Please select (optional)')
 
 #dropdown crop
 #df_crops.insert(0, ["Please select"])
 crop1 = CTkComboBox(frame2, width = 200, values = list(df_crops['List_UI']))
-crop1.set('Please select (optional)')
- 
+crop1.set('Please select (mandatory)')
 
 
 # Create a dictionary to store the widgets
@@ -113,10 +94,16 @@ def create_widget(row, column, widget_type, **kwargs):
     widget.grid(row=row, column=column, padx=10, pady=10)
     widgets[f'widget_{row}_{column}'] = widget
 # Create the labels
-labels = ["Longitude", "Latitude", "Crop name", "Date sowing", "Date harvest", "Fertilizer #1 used", "Fertilizer #2 used", "Fertilizer #3 used", "Yield", "Water consumed", "Diesel consumed"]
+labels = ["Longitude", "Latitude", "Crop name", "Date sowing", "Date harvest"," " , " ", "Fertilizer #1 used", "Fertilizer #2 used", "Fertilizer #3 used", "Yield", "Water consumed", "Diesel consumed"]
 for row, label in enumerate(labels):
     create_widget(row+1,0 , customtkinter.CTkLabel, text=label, font=customtkinter.CTkFont(family="Circular Std Black",size=15, weight="bold"),justify="left", anchor="w")
-    
+
+option = customtkinter.CTkLabel(frame2, text="option",font=customtkinter.CTkFont(family="Circular Std Black",size=15, weight="bold")) 
+option.grid(row = 7, column = 1, padx=10, pady=10)  
+unit = customtkinter.CTkLabel(frame2, text="unit",font=customtkinter.CTkFont(family="Circular Std Black",size=15, weight="bold")) 
+unit.grid(row = 7, column = 3, padx=10, pady=10)
+mass = customtkinter.CTkLabel(frame2, text="amount", font=customtkinter.CTkFont(family="Circular Std Black",size=15, weight="bold"))   
+mass.grid(row = 7, column = 2, padx=10, pady=10)  
 
 #first column
 Crop = customtkinter.CTkEntry(frame2, width = 200,placeholder_text=" ")
@@ -126,17 +113,17 @@ cal.grid(row=4,column=1, padx=10, pady=10)
 Harvest_date = customtkinter.CTkEntry(frame2, width = 200)
 cal2=DateEntry(frame2, width = 27,selectmode='day')
 cal2.grid(row=5,column=1, padx=10, pady=10)
-Fertilizer1 = customtkinter.CTkEntry(frame2, width = 200,placeholder_text="optional")
-Fertilizer2 = customtkinter.CTkEntry(frame2, width = 200,placeholder_text="optional")
-Fertilizer3 = customtkinter.CTkEntry(frame2, width = 200,placeholder_text="optional")
+Fertilizer1 = customtkinter.CTkEntry(frame2, width = 200)
+Fertilizer2 = customtkinter.CTkEntry(frame2, width = 200)
+Fertilizer3 = customtkinter.CTkEntry(frame2, width = 200)
 
 #third column - mass
-Fert1_mass = customtkinter.CTkEntry(frame2, width = 200,placeholder_text="optional")
-Fert2_mass = customtkinter.CTkEntry(frame2, width = 200,placeholder_text="optional")
-Fert3_mass = customtkinter.CTkEntry(frame2, width = 200,placeholder_text="optional")
-yield_drymass_mass = customtkinter.CTkEntry(frame2, width = 200,placeholder_text="optional")
-irrigation_mass = customtkinter.CTkEntry(frame2, width = 200,placeholder_text="optional")
-diesel_consumed_mass= customtkinter.CTkEntry(frame2, width = 200,placeholder_text="optional")
+Fert1_mass = customtkinter.CTkEntry(frame2, width = 200)
+Fert2_mass = customtkinter.CTkEntry(frame2, width = 200)
+Fert3_mass = customtkinter.CTkEntry(frame2, width = 200)
+yield_drymass_mass = customtkinter.CTkEntry(frame2, width = 200)
+irrigation_mass = customtkinter.CTkEntry(frame2, width = 200)
+diesel_consumed_mass= customtkinter.CTkEntry(frame2, width = 200)
 
 Longitude = customtkinter.CTkEntry(frame2, width = 200,placeholder_text="Please place marker on the map")
 Latitude= customtkinter.CTkEntry(frame2, width = 200,placeholder_text="Please place marker on the map")
@@ -146,27 +133,26 @@ Latitude= customtkinter.CTkEntry(frame2, width = 200,placeholder_text="Please pl
 Longitude.grid(row = 1, column = 1, padx=10, pady=10)
 Latitude.grid(row = 2, column = 1, padx=10, pady=10)
 crop1.grid(row = 3, column = 1, padx=10, pady=10)
-Fert1.grid(row = 6, column = 1, padx=10, pady=10)
-Fert2.grid(row = 7, column = 1, padx=10, pady=10)
-Fert3.grid(row = 8, column = 1, padx=10, pady=10)
-yield1.grid(row = 9, column = 1, padx=10, pady=10)
-#irri1.grid(row = 10, column = 1, padx=10, pady=10)
+Fert1.grid(row = 8, column = 1, padx=10, pady=10)
+Fert2.grid(row = 9, column = 1, padx=10, pady=10)
+Fert3.grid(row = 10, column = 1, padx=10, pady=10)
+yield1.grid(row = 11, column = 1, padx=10, pady=10)
 
 #amount
-Fert1_mass.grid(row = 6, column = 2, padx=10, pady=10)
-Fert2_mass.grid(row = 7, column = 2, padx=10, pady=10)
-Fert3_mass.grid(row = 8, column = 2, padx=10, pady=10)
-yield_drymass_mass.grid(row = 9, column = 2, padx=10, pady=10)
-irrigation_mass.grid(row = 10, column = 2, padx=10, pady=10)
-diesel_consumed_mass.grid(row = 11, column = 2, padx=10, pady=10)
+Fert1_mass.grid(row = 8, column = 2, padx=10, pady=10)
+Fert2_mass.grid(row = 9, column = 2, padx=10, pady=10)
+Fert3_mass.grid(row = 10, column = 2, padx=10, pady=10)
+yield_drymass_mass.grid(row = 11, column = 2, padx=10, pady=10)
+irrigation_mass.grid(row = 12, column = 2, padx=10, pady=10)
+diesel_consumed_mass.grid(row = 13, column = 2, padx=10, pady=10)
 
 #unit
-Fertilizer1_unit.grid(row = 6, column = 3, padx=10, pady=10)
-Fertilizer2_unit.grid(row = 7, column = 3, padx=10, pady=10)
-Fertilizer3_unit.grid(row = 8, column = 3, padx=10, pady=10)
-yield_drymass_unit.grid(row = 9, column = 3, padx=10, pady=10)
-irrigation_unit.grid(row = 10, column = 3, padx=10, pady=10)
-diesel_consumed_unit.grid(row = 11, column = 3, padx=10, pady=10)
+Fertilizer1_unit.grid(row = 8, column = 3, padx=10, pady=10)
+Fertilizer2_unit.grid(row = 9, column = 3, padx=10, pady=10)
+Fertilizer3_unit.grid(row = 10, column = 3, padx=10, pady=10)
+yield_drymass_unit.grid(row = 11, column = 3, padx=10, pady=10)
+irrigation_unit.grid(row = 12, column = 3, padx=10, pady=10)
+diesel_consumed_unit.grid(row = 13, column = 3, padx=10, pady=10)
 
 #getting input---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 def getInput():
@@ -180,8 +166,6 @@ def getInput():
     g = Fert2.get()
     h = Fert3.get()
     i = yield1.get()
-    #j = irri1.get()
-   
 
     ff = Fert1_mass.get()
     gg =Fert2_mass.get()
@@ -244,7 +228,7 @@ def getInput():
     print(user_data)
    
 customtkinter.CTkButton(frame2,height = 90, width=110, text = "submit",font=customtkinter.CTkFont(family="Circular Std Black",size=20, weight="bold"),
-           command = getInput).grid(column = 0,row = 13,columnspan= 5, sticky = W)
+           command = getInput).grid(column = 0,row = 13,columnspan= 5, sticky = E)
 
 root.mainloop()
 
