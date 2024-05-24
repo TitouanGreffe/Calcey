@@ -19,16 +19,14 @@ label_list = ["Crop name", "Date sowing", "Date harvest", "Fertilizer #1 used", 
 df_crops = pd.read_excel('data/Mapping_data_Calcey.xlsx', sheet_name='Mapping_Fertilizer', usecols='A') 
 
 
-
 frame2 =customtkinter.CTkFrame(root, width=100, height=100)
 frame3 = customtkinter.CTkFrame(root, width=100, height=100)
 
 frame2.grid(row=1, column=0, padx=10, pady=10, sticky=tk.W)
 frame3.grid(column=0, row=0, sticky=tk.W, padx=5, pady=5)
 
-label = customtkinter.CTkLabel(frame3, text="Welcome to calcey!", font = 15px, width=300, height=50, fg_color='transparent')
+label = customtkinter.CTkLabel(frame3, text="Welcome to calcey!",  width=300, height=50, fg_color='transparent',font=customtkinter.CTkFont(family="Circular Std Black",size=30, weight="bold"))
 label.pack()
-
 
 
 def search_event(event=None):
@@ -103,9 +101,10 @@ def create_widget(row, column, widget_type, **kwargs):
     widget.grid(row=row, column=column, padx=10, pady=10)
     widgets[f'widget_{row}_{column}'] = widget
 # Create the labels
-labels = ["Longitude", "Latitude", "Crop name", "Date sowing", "Date harvest", "Fertilizer #1 used", "Fertilizer #2 used", "Fertilizer #3 used", "yield", "water consumption", "diesel consumed"]
+labels = ["Longitude", "Latitude", "Crop name", "Date sowing", "Date harvest", "Fertilizer #1 used", "Fertilizer #2 used", "Fertilizer #3 used", "Yield", "Water consumed", "Diesel consumed"]
 for row, label in enumerate(labels):
-    create_widget(row+1,0 , customtkinter.CTkLabel, text=label, )
+    create_widget(row+1,0 , customtkinter.CTkLabel, text=label, font=customtkinter.CTkFont(family="Circular Std Black",size=15, weight="bold"),justify="left", anchor="w")
+    
 
 #first column
 Crop = customtkinter.CTkEntry(frame2, width = 200)
