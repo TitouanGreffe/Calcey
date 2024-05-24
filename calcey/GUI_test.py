@@ -19,6 +19,10 @@ from geopy.geocoders import Nominatim
 
 class calcey:
     def __init__(self):
+        bd.projects.set_current("calcey")
+            
+        self.brightway_checkin()
+        
         self.root = tk.Tk()
         self.frame = tk.Frame(self.root)
         self.frame.pack()
@@ -39,46 +43,23 @@ class calcey:
 
         self.button.pack(side=tk.LEFT)
 
-    def print_hello(self):
-        print("Hello, World")
 
     def print_result(self):
-        try:
-            self.brightway_checkin()
-        except ValueError:
-            print("Could not check into brightway")
-        try:
-            # get all inputs from the UI
-            value_lat = float(self.input_field_lat.get())
-            value_lon = float(self.input_field_lon.get())
-            crop = self.input_field_crop.get()
-
-            # get all the background data based on the UI input
-            yield_data = self.get_background_data_yield(value_lat, value_lon, crop)
-            water_data = self.get_background_data_water(value_lat, value_lon, crop)
-            fert_data = self.get_background_data_fert(value_lat, value_lon, crop)
-            pest_data, pest_total = self.get_background_data_pest(value_lat, value_lon, crop)
-
-            # create the final dataframe
-            yield_in_kgperha, df_fert, water_m3perkg, pest_data, pest_kgperkg = self.create_final_dataframe(yield_data, fert_data, water_data, pest_data, pest_total)
-            
-            print(f"The yield in kg per ha is: {yield_in_kgperha}")
-            print(f"The water footprint in m3 per kg is: {water_m3perkg}")
-            print(f"The total amount of pesticide used per kg is: {pest_kgperkg}")
-            print(pest_data)
-            
-        except ValueError:
-            print("Please enter a valid float value")
-
-    def country_from_coordinates(self, Latitude: float, Longitude: float):
-        lat_str = str(Latitude)
-        lon_str = str(Longitude)
-        geolocator = Photon(user_agent="measurements")
-        location = geolocator.reverse(lat_str + "," + lon_str)
-        address = location.address
-        data_address = address.split(',')
-        country = data_address[len(data_address)-1].lstrip().rstrip()
-        return(country)
+        
+        # get all inputs from the UI
+        value_lat = float(self.input_field_lat.get())
+        value_lon = float(self.input_field_lon.get())
+        crop = self.input_field_crop.get()
+        # input_yield = self.input_field_yield.get()   n_fert_input
+        
+        self.create_main_process(self.name_database, value_lat, value_lon, crop)
+        # yield_ = input_yield       n_fert_input
+        print("create_main_process finished")
+        self.dataframe_exchanges(latitude=value_lat, longitude=value_lon, crop=crop)
+        print("dataframe_exchanges finished")
+        self.generate_edges_to_product()
+        print("generate_edges_to_product finished")
+        self.calculate_LCA_results()
 
     def get_background_data_yield(self, input_lat: float, input_lon: float, crop: str):
         # get yield data
@@ -93,12 +74,15 @@ class calcey:
     def country_from_coordinates(self, Latitude: float, Longitude: float):
         lat_str = str(Latitude)
         lon_str = str(Longitude)
-        geolocator = Photon(user_agent="measurements")
-        location = geolocator.reverse(lat_str + "," + lon_str)
+        geolocator = Nominatim(user_agent="GetLoc")
+        location = geolocator.reverse(lat_str + "," + lon_str, language="en")
+        print("location:" , location)
         address = location.address
+        print("address:" , address)
         data_address = address.split(',')
         print("data_address:" , data_address)
         country = data_address[len(data_address)-1].lstrip().rstrip()
+        country = coco.convert(country, to="name_short")
         return(country)
     
     
@@ -302,12 +286,15 @@ class calcey:
         df_fert['Value'] = df_fert['Value'] / yield_in_kgperha
 
         # water_data
-        water_m3perkg = water_data.at[0, 'value']
+        water_m3perkg = water_data.at[0, 'value'] / 1000
 
         # pest data
         pest_data['value'] = pest_data['value'] / yield_in_kgperha
         pest_data = pest_data.set_index(pest_data.columns[0])
+        pest_data.index = [i.capitalize() for i in pest_data.index]
 
+        # display(pest_data)
+        
         # pest total
         pest_kgperkg = pest_total / yield_in_kgperha
 
@@ -337,65 +324,69 @@ class calcey:
 
 
     def dataframe_exchanges(self, latitude, longitude, crop, yield_ = None, n_fert_input=None, p2o5_fert_input=None, k2o_fert_input=None):
-        df = pd.read_excel("Mapping_data_Calcey.xlsx", sheet_name = "Mapping_flows_ecoinvent", index_col =0) ## adjust path before "Mapping_data_Calcey.xlsx"
-        all_inputs = list(set(df.index))
+        self.mapping_flows_uuid = pd.read_excel("../data/Mapping_data_Calcey.xlsx", sheet_name = "Mapping_flows_ecoinvent", index_col =0) ## adjust path before "Mapping_data_Calcey.xlsx"
+        all_inputs = list(set(self.mapping_flows_uuid.index))
         all_inputs = [x for x in all_inputs if type(x) != float]
-        df_output = pd.DataFrame(index = all_inputs , columns = ['Amount'])
+        self.df_output = pd.DataFrame(index = all_inputs , columns = ['Amount'])
         if yield_ is not None and n_fert_input is not None:
             print("There is yield input and nitrogen fertilizer input, thanks!")
             pest_data, pest_total = self.get_background_data_pest(latitude,longitude,crop) ## add self.
             fert_data = self.get_background_data_fert(latitude,longitude,crop) ## add self.
             water_data = self.get_background_data_water(latitude,longitude,crop) ## add self.
             generic_yield, df_fert_per_kg, water_m3_per_kg, df_pest_per_kg, total_pest_per_kg = self.create_final_dataframe(yield_,fert_data,water_data,pest_data,pest_total) ## add self.
-            df_output.loc["Default_pesticide","Amount"] = total_pest_per_kg
-            df_output.loc["Default_irrigation","Amount"] = water_m3_per_kg/0.8
-            df_output.loc["Default_nitrogen_fertilizer","Amount"] = n_fert_input
-            df_output.loc["Default_p2o5_fertilizer","Amount"] = df_fert_per_kg.loc["Mean_P2O5_applied","Value"]
-            df_output.loc["Default_k2o_fertilizer","Amount"] = df_fert_per_kg.loc["Mean_K2O_applied","Value"]
+            self.df_output.loc["Default_pesticide","Amount"] = total_pest_per_kg
+            self.df_output.loc["Default_irrigation","Amount"] = water_m3_per_kg/0.8
+            self.df_output.loc["Default_nitrogen_fertilizer","Amount"] = n_fert_input
+            self.df_output.loc["Default_p2o5_fertilizer","Amount"] = df_fert_per_kg.loc["Mean_P2O5_applied","Value"]
+            self.df_output.loc["Default_k2o_fertilizer","Amount"] = df_fert_per_kg.loc["Mean_K2O_applied","Value"]
+            list_pesticides = list(pest_data.index)
+            list_compartments = ["pest_em_soil", "pest_em_air"]
             for i in list_pesticides:
                 for compartment in list_compartments:
                     df_pesticides_emissions = self.calculate_pest_emissions(i,pest_data.loc[i,"value"])
-                    df_output.loc[i+""+compartment,"Amount"] = df_pesticides_emissions.loc[i,compartment]
-            return(df_output)
-        if yield is None and n_fert_input is None:
+                    self.df_output.loc[str(i)+""+compartment,"Amount"] = df_pesticides_emissions.loc[i,compartment]
+            self.df_output = self.df_output.fillna(0)
+        if yield_ is None and n_fert_input is None:
             print("You don't even know your yield! But we have an answer for you!")
             yield_data = self.get_background_data_yield(latitude,longitude,crop)
             pest_data, pest_total = self.get_background_data_pest(latitude,longitude,crop) ## add self.
             fert_data = self.get_background_data_fert(latitude,longitude,crop) ## add self.
             water_data = self.get_background_data_water(latitude,longitude,crop) ## add self.
-            generic_yield, df_fert_per_kg, water_m3_per_kg, df_pest_per_kg, total_pest_per_kg = self.create_final_dataframe(yield_,fert_data,water_data,pest_data,pest_total) ## add self.
-            df_output.loc["Default_pesticide","Amount"] = total_pest_per_kg
-            df_output.loc["Default_irrigation","Amount"] = water_m3_per_kg/0.8
-            df_output.loc["Default_nitrogen_fertilizer","Amount"] = df_fert_per_kg.loc["Mean_N_applied","Value"]
-            df_output.loc["Default_p2o5_fertilizer","Amount"] = df_fert_per_kg.loc["Mean_P2O5_applied","Value"]
-            df_output.loc["Default_k2o_fertilizer","Amount"] = df_fert_per_kg.loc["Mean_K2O_applied","Value"]
+            generic_yield, df_fert_per_kg, water_m3_per_kg, df_pest_per_kg, total_pest_per_kg = self.create_final_dataframe(yield_data,fert_data,water_data,pest_data,pest_total) ## add self.
+            self.df_output.loc["Default_pesticide","Amount"] = total_pest_per_kg
+            self.df_output.loc["Default_irrigation","Amount"] = water_m3_per_kg/0.8
+            self.df_output.loc["Default_nitrogen_fertilizer","Amount"] = df_fert_per_kg.loc["Mean_N_applied","Value"]
+            self.df_output.loc["Default_p2o5_fertilizer","Amount"] = df_fert_per_kg.loc["Mean_P2O5_applied","Value"]
+            self.df_output.loc["Default_k2o_fertilizer","Amount"] = df_fert_per_kg.loc["Mean_K2O_applied","Value"]
+            list_pesticides = list(pest_data.index)
+            list_compartments = ["pest_em_soil", "pest_em_air"]
             for i in list_pesticides:
                 for compartment in list_compartments:
                     df_pesticides_emissions = self.calculate_pest_emissions(i,pest_data.loc[i,"value"]) ## add self.
-                    df_output.loc[i+"_"+compartment,"Amount"] = df_pesticides_emissions.loc[i,compartment]
-        return(df_output)
+                    self.df_output.loc[str(i)+"_"+compartment,"Amount"] = df_pesticides_emissions.loc[i,compartment]
+            self.df_output = self.df_output.fillna(0)
 
     def generate_edges_to_product(self):
-        for name in list(mapping_flows_uuid.index):
-            self.create_edge(df_output.loc[name,"Amount"], name) ## add self.
+        for name in list(self.mapping_flows_uuid.index):
+            self.create_edge(self.df_output.loc[name,"Amount"], name) ## add self.
 
 
     def create_edge(self, amount, name):
         #mapping_flows_uuid = mapping_flows_uuid
             self.product.new_edge(
                amount=amount, 
-               type= self.type_flow_node_ei(name, mapping_flows_uuid), 
-               input=self.code_node_ei(name, mapping_flows_uuid) 
+               type= self.type_flow_node_ei(name, self.mapping_flows_uuid), 
+               input=self.code_node_ei(name, self.mapping_flows_uuid) 
            ).save()
         
     def code_node_ei(self, input_name,mapping_flows_uuid):
-        uuid = mapping_flows_uuid.loc[input_name,"uuid"]
+        uuid = self.mapping_flows_uuid.loc[input_name,"uuid"]
         name_database = mapping_flows_uuid.loc[input_name,"database"]
         return(name_database,uuid)
 
     
     def type_flow_node_ei(self, input_name,mapping_flows_uuid):
-        type_ = mapping_flows_uuid.loc[input_name,"type"]
+        type_ = self.mapping_flows_uuid.loc[input_name,"type"]
         return type_
 
     
@@ -413,21 +404,25 @@ class calcey:
         }
         self.product = self.db.new_node(**data)
         self.product.save()
-        return(product)
+        return(self.product)
 
     
     def brightway_checkin(self):
-        bi.bw2setup()
+        # bi.bw2setup()
         self.name_database = "Calcey_crop_database"
+        if self.name_database in list(bd.databases):
+            del bd.databases[self.name_database]
         self.db = bd.Database(self.name_database)
         self.db.register()
 
 
     def calculate_LCA_results(self):
         lca = bc.LCA(
-            demand={bike: 1},
-            data_objs=[dp_static],
+            demand={self.product: 1},
+            method = ('ReCiPe 2016 v1.03, midpoint (H) no LT',
+                        'climate change no LT',
+                        'global warming potential (GWP1000) no LT'),
         )
         lca.lci()
         lca.lcia()
-        return lca.score
+        print(lca.score)
