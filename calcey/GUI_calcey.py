@@ -3,26 +3,59 @@ from tkinter import *
 from tkinter import ttk
 import tkintermapview
 import customtkinter
-import pickle
 from tkcalendar import DateEntry
 import pandas as pd
 
 
+
 root = customtkinter.CTk()
-root.geometry(f"{800}x{1000}")
+root.geometry(f"{1500}x{1000}")
 root.title("calcey")
-customtkinter.set_appearance_mode("Light")
+customtkinter.set_appearance_mode("Dark")
 
 
 #lists---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 label_list = ["Crop name", "Date sowing", "Date harvest", "Fertilizer #1 used", "Fertilizer #2 used", "Fertilizer #3 used", "yield drymass", "yield freshmass", "irrigation", "diesel consumed"  ]
+df_crops = pd.read_excel('data/Mapping_data_Calcey.xlsx', sheet_name='Mapping_Fertilizer', usecols='A') 
 
-df_fertilizer = pd.read_excel('data/Mapping_data_Calcey.xlsx', sheet_name='Mapping_Fertilizer', usecols='A') 
+
+
+frame2 =customtkinter.CTkFrame(root, width=100, height=100)
+frame3 = customtkinter.CTkFrame(root, width=100, height=100)
+
+frame2.grid(row=1, column=0, padx=10, pady=10, sticky=tk.W)
+frame3.grid(column=0, row=0, sticky=tk.W, padx=5, pady=5)
+
+label = customtkinter.CTkLabel(frame3, text="Welcome to calcey!", font = 15px, width=300, height=50, fg_color='transparent')
+label.pack()
+
+
+
+def search_event(event=None):
+        map_widget.set_address(entry.get())
+
+entry = customtkinter.CTkEntry(frame2,placeholder_text="type address")
+entry.grid(row=12, column=4, sticky="e", padx=(15, 0), pady=5)
+entry.bind("<Return>", search_event)
+
+button_5 = customtkinter.CTkButton(frame2,
+                                                text="Search",
+                                                width=90,
+                                                command=search_event)
+button_5.grid(row=13, column=4, sticky="e", padx=(12, 0), pady=5)
+
+def search_event(self, event=None):
+        self.map_widget.set_address(self.entry.get())
+
+
+
+
+# Create the search bar entry widget
 
 
 #getting coordinates
-map_widget = tkintermapview.TkinterMapView(root, width=800, height=400, corner_radius=0)
-map_widget.place(relx=0, rely=1, anchor=tk.SW)
+map_widget = tkintermapview.TkinterMapView(frame2, width=500, height=500, corner_radius=0)
+map_widget.grid(row=0, column=4,rowspan = 12, padx=10, pady=10, sticky=tk.E)
 
 def get_coordinates(coordinates_tuple):
     longitude = coordinates_tuple[1]
@@ -36,83 +69,66 @@ def get_coordinates(coordinates_tuple):
 
 map_widget.add_left_click_map_command(get_coordinates) 
 
+
 #dropdowns---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #dropdown_unit
-n1 = tk.StringVar()
-n2 = tk.StringVar()  
-n3 = tk.StringVar() 
-n4 = tk.StringVar() 
-n5 = tk.StringVar() 
-n6 = tk.StringVar() 
-n7 = tk.StringVar() 
-n8 = tk.StringVar() 
-n9 = tk.StringVar() 
-Fertilizer1_unit = ttk.Combobox(root, width = 10, textvariable = n3, values=('kg/ha') )  
-Fertilizer2_unit = ttk.Combobox(root, width = 10, textvariable = n4, values=('kg/ha')) 
-Fertilizer3_unit = ttk.Combobox(root, width = 10, textvariable = n5, values=('kg/ha')) 
-yield_drymass_unit = ttk.Combobox(root, width = 10, textvariable = n6, values=('kg/ha')) 
-irrigation_unit = ttk.Combobox(root, width = 10, textvariable = n8, values =('m^3/ha') )  
-diesel_consumed_unit = ttk.Combobox(root, width = 10, textvariable = n9, values = ('l/ha')) 
-
+Fertilizer1_unit = customtkinter.CTkOptionMenu(frame2, width = 100, values=[' ','kg/ha'] )  
+Fertilizer2_unit = customtkinter.CTkOptionMenu(frame2, width = 100, values=[' ','kg/ha']) 
+Fertilizer3_unit = customtkinter.CTkOptionMenu(frame2, width = 100, values=[' ','kg/ha']) 
+yield_drymass_unit = customtkinter.CTkOptionMenu(frame2, width = 100, values=[' ','kg/ha']) 
+irrigation_unit = customtkinter.CTkOptionMenu(frame2, width = 100, values =[' ','m^3/ha'] )  
+diesel_consumed_unit = customtkinter.CTkOptionMenu(frame2, width = 100, values = [' ','l/ha']) 
 
 #dropdown_fertilizer
-Fert=('Ammonium Sulphate', 'Ammoniumchloride', 'Calcium Ammonium Nitrate', 'Calcium Nitrate', 'Urea', 'Single superphosphate', 'Rock Phosphate', 'Potassium chloride', 'Potassium Sulphate', '15-15-15', '10-26-26')
-m1 = tk.StringVar()
-m2 = tk.StringVar()  
-m3 = tk.StringVar() 
-Fert1 = ttk.Combobox(root, width = 27, textvariable = m1, values=Fert) 
-Fert2 = ttk.Combobox(root, width = 27, textvariable = m2, values=Fert) 
-Fert3 = ttk.Combobox(root, width = 27, textvariable = m3, values=Fert)  
+Fert=(' ','Ammonium Sulphate', 'Ammoniumchloride', 'Calcium Ammonium Nitrate', 'Calcium Nitrate', 'Urea', 'Single superphosphate', 'Rock Phosphate', 'Potassium chloride', 'Potassium Sulphate', '15-15-15', '10-26-26')
+Fert1 = customtkinter.CTkOptionMenu(frame2, width = 200, values=Fert) 
+Fert2 = customtkinter.CTkOptionMenu(frame2, width = 200, values=Fert) 
+Fert3 = customtkinter.CTkOptionMenu(frame2, width = 200, values=Fert)  
 
 #dropdown yield
-yiel=('drymass', 'freshmass')
-o1 = tk.StringVar()
-yield1 = ttk.Combobox(root, width = 27, textvariable = o1, values = yiel) 
-
-
+yiel=(' ','drymass', 'freshmass')
+yield1 = customtkinter.CTkOptionMenu(frame2, width = 200, values = yiel) 
 
 #dropdown crop
-q1 = tk.StringVar()
-crop1 = ttk.Combobox(root, width = 27, textvariable = q1, values = list(df_fertilizer['List_UI'])) 
+#df_crops.insert(0, "")
+crop1 = customtkinter.CTkOptionMenu(frame2, width = 200, values = list(df_crops['List_UI'])) 
 
-#Label---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-Label(root, text="amount").grid(row = 0,column=2, sticky = W)
-Label(root, text="unit").grid(row = 0, column=3, sticky = W)
-Label(root, text = "Longitude").grid(row = 1, sticky = W)
-Label(root, text = "Latitude").grid(row = 2, sticky = W)
-Label(root, text = "Crop name").grid(row = 3, sticky = W)
-Label(root, text = "Date sowing").grid(row = 4, sticky = W)
-Label(root, text = "Date harvest").grid(row = 5, sticky = W)
-Label(root, text = "Fertilizer #1 used").grid(row = 6, sticky = W)
-Label(root, text = "Fertilizer #2 used").grid(row = 7, sticky = W)
-Label(root, text = "Fertilizer #3 used").grid(row = 8, sticky = W)
-Label(root, text = "yield").grid(row = 9, sticky = W)
-Label(root, text = "water consumed").grid(row = 10, sticky = W)
-Label(root, text = "diesel consumed").grid(row = 11, sticky = W)
 
-#Entry---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Create a dictionary to store the widgets
+widgets = {}
+
+# Create a function to create and place the widgets
+def create_widget(row, column, widget_type, **kwargs):
+    widget = widget_type(frame2, **kwargs)
+    widget.grid(row=row, column=column, padx=10, pady=10)
+    widgets[f'widget_{row}_{column}'] = widget
+# Create the labels
+labels = ["Longitude", "Latitude", "Crop name", "Date sowing", "Date harvest", "Fertilizer #1 used", "Fertilizer #2 used", "Fertilizer #3 used", "yield", "water consumption", "diesel consumed"]
+for row, label in enumerate(labels):
+    create_widget(row+1,0 , customtkinter.CTkLabel, text=label, )
+
 #first column
-Crop = Entry(root, width = 27)
-Sowing_date = Entry(root, width = 27)
-cal=DateEntry(root, width = 27)
+Crop = customtkinter.CTkEntry(frame2, width = 200)
+Sowing_date = customtkinter.CTkEntry(frame2, width = 200)
+cal=DateEntry(frame2, width = 27)
 cal.grid(row=4,column=1, padx=10, pady=10)
-Harvest_date = Entry(root, width = 27)
-cal2=DateEntry(root, width = 27,selectmode='day')
+Harvest_date = customtkinter.CTkEntry(frame2, width = 200)
+cal2=DateEntry(frame2, width = 27,selectmode='day')
 cal2.grid(row=5,column=1, padx=10, pady=10)
-Fertilizer1 = Entry(root, width = 27)
-Fertilizer2 = Entry(root, width = 27)
-Fertilizer3 = Entry(root, width = 27)
+Fertilizer1 = customtkinter.CTkEntry(frame2, width = 200)
+Fertilizer2 = customtkinter.CTkEntry(frame2, width = 200)
+Fertilizer3 = customtkinter.CTkEntry(frame2, width = 200)
 
 #third column - mass
-Fert1_mass = Entry(root, width = 27)
-Fert2_mass = Entry(root, width = 27)
-Fert3_mass = Entry(root, width = 27)
-yield_drymass_mass = Entry(root, width = 27)
-irrigation_mass = Entry(root, width = 27)
-diesel_consumed_mass= Entry(root, width = 27)
+Fert1_mass = customtkinter.CTkEntry(frame2, width = 200)
+Fert2_mass = customtkinter.CTkEntry(frame2, width = 200)
+Fert3_mass = customtkinter.CTkEntry(frame2, width = 200)
+yield_drymass_mass = customtkinter.CTkEntry(frame2, width = 200)
+irrigation_mass = customtkinter.CTkEntry(frame2, width = 200)
+diesel_consumed_mass= customtkinter.CTkEntry(frame2, width = 200)
 
-Longitude = Entry(root, width = 27)
-Latitude= Entry(root, width = 27)
+Longitude = customtkinter.CTkEntry(frame2, width = 200)
+Latitude= customtkinter.CTkEntry(frame2, width = 200)
 
 #grid---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #entry
@@ -205,7 +221,6 @@ def getInput():
         "unit" : iii
   },
         "irrigation": {
-        "name" : j,
         "amount" : jj,
         "unit" : jjj
   },
@@ -216,16 +231,9 @@ def getInput():
 }
     
     print(user_data)
-
-    #with open('user_data.pkl', 'wb') as fp:
-        #pickle.dump(user_data, fp)
-        #print('dictionary saved successfully to file')
-
-    
-Button(root,height= 5, width=15, bg = 'white', text = "submit",
-           command = getInput).grid(row = 14, sticky = W)
-
-
+   
+customtkinter.CTkButton(frame2,height = 90, width=110, text = "submit",
+           command = getInput).grid(column = 0,row = 13,columnspan= 5, sticky = W)
 
 root.mainloop()
 
