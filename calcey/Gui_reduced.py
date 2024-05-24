@@ -2,6 +2,7 @@ import customtkinter
 from tkintermapview import TkinterMapView
 import pandas as pd
 
+
 customtkinter.set_default_color_theme("blue")
 
 
