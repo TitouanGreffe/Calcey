@@ -9,7 +9,7 @@ import pandas as pd
 
 
 root = customtkinter.CTk()
-root.geometry(f"{1500}x{1000}")
+root.geometry(f"{1250}x{750}")
 root.title("calcey")
 customtkinter.set_appearance_mode("Dark")
 
@@ -107,27 +107,27 @@ for row, label in enumerate(labels):
     
 
 #first column
-Crop = customtkinter.CTkEntry(frame2, width = 200)
+Crop = customtkinter.CTkEntry(frame2, width = 200,placeholder_text=" ")
 Sowing_date = customtkinter.CTkEntry(frame2, width = 200)
 cal=DateEntry(frame2, width = 27)
 cal.grid(row=4,column=1, padx=10, pady=10)
 Harvest_date = customtkinter.CTkEntry(frame2, width = 200)
 cal2=DateEntry(frame2, width = 27,selectmode='day')
 cal2.grid(row=5,column=1, padx=10, pady=10)
-Fertilizer1 = customtkinter.CTkEntry(frame2, width = 200)
-Fertilizer2 = customtkinter.CTkEntry(frame2, width = 200)
-Fertilizer3 = customtkinter.CTkEntry(frame2, width = 200)
+Fertilizer1 = customtkinter.CTkEntry(frame2, width = 200,placeholder_text="optional")
+Fertilizer2 = customtkinter.CTkEntry(frame2, width = 200,placeholder_text="optional")
+Fertilizer3 = customtkinter.CTkEntry(frame2, width = 200,placeholder_text="optional")
 
 #third column - mass
-Fert1_mass = customtkinter.CTkEntry(frame2, width = 200)
-Fert2_mass = customtkinter.CTkEntry(frame2, width = 200)
-Fert3_mass = customtkinter.CTkEntry(frame2, width = 200)
-yield_drymass_mass = customtkinter.CTkEntry(frame2, width = 200)
-irrigation_mass = customtkinter.CTkEntry(frame2, width = 200)
-diesel_consumed_mass= customtkinter.CTkEntry(frame2, width = 200)
+Fert1_mass = customtkinter.CTkEntry(frame2, width = 200,placeholder_text="optional")
+Fert2_mass = customtkinter.CTkEntry(frame2, width = 200,placeholder_text="optional")
+Fert3_mass = customtkinter.CTkEntry(frame2, width = 200,placeholder_text="optional")
+yield_drymass_mass = customtkinter.CTkEntry(frame2, width = 200,placeholder_text="optional")
+irrigation_mass = customtkinter.CTkEntry(frame2, width = 200,placeholder_text="optional")
+diesel_consumed_mass= customtkinter.CTkEntry(frame2, width = 200,placeholder_text="optional")
 
-Longitude = customtkinter.CTkEntry(frame2, width = 200)
-Latitude= customtkinter.CTkEntry(frame2, width = 200)
+Longitude = customtkinter.CTkEntry(frame2, width = 200,placeholder_text="Please place marker on the map")
+Latitude= customtkinter.CTkEntry(frame2, width = 200,placeholder_text="Please place marker on the map")
 
 #grid---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #entry
