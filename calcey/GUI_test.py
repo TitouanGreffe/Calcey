@@ -19,29 +19,29 @@ from geopy.geocoders import Nominatim
 
 class calcey:
         def __init__(self):
-        bd.projects.set_current("calcey")
+            bd.projects.set_current("calcey")
+                
+            self.brightway_checkin()
             
-        self.brightway_checkin()
-        
-        self.root = tk.Tk()
-        self.frame = tk.Frame(self.root)
-        self.frame.pack()
+            self.root = tk.Tk()
+            self.frame = tk.Frame(self.root)
+            self.frame.pack()
 
-        self.input_field_lat = tk.Entry(self.frame, width=20)
-        self.input_field_lat.pack()
+            self.input_field_lat = tk.Entry(self.frame, width=20)
+            self.input_field_lat.pack()
 
-        self.input_field_lon = tk.Entry(self.frame, width=20)
-        self.input_field_lon.pack()
+            self.input_field_lon = tk.Entry(self.frame, width=20)
+            self.input_field_lon.pack()
 
-        self.input_field_crop = tk.Entry(self.frame, width=20)
-        self.input_field_crop.pack()
+            self.input_field_crop = tk.Entry(self.frame, width=20)
+            self.input_field_crop.pack()
 
-        self.button = tk.Button(self.frame, 
-                               text="CLICK ME", 
-                               fg="red",
-                               command=self.print_result)
+            self.button = tk.Button(self.frame, 
+                                text="CLICK ME", 
+                                fg="red",
+                                command=self.print_result)
 
-        self.button.pack(side=tk.LEFT)
+            self.button.pack(side=tk.LEFT)
 
 
     def print_result(self):
