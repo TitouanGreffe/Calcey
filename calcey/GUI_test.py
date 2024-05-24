@@ -18,7 +18,7 @@ import uuid
 from geopy.geocoders import Nominatim
 
 class calcey:
-    def __init__(self):
+        def __init__(self):
         bd.projects.set_current("calcey")
             
         self.brightway_checkin()
@@ -45,7 +45,7 @@ class calcey:
 
 
     def print_result(self):
-        # get all inputs from the UI
+        """Gets all input data from the user interface (UI), then creates the product process and its exchanges and edges."""
         value_lat = float(self.input_field_lat.get())
         value_lon = float(self.input_field_lon.get())
         crop = self.input_field_crop.get()
@@ -62,7 +62,7 @@ class calcey:
 
 
     def get_background_data_yield(self, input_lat: float, input_lon: float, crop: str):
-        """get yield data"""
+        """Gets yield data, based on the coordinates and crop provided in the UI."""
         df = pd.read_csv("../data/FAOSTAT_data_yield.csv")
         country = self.country_from_coordinates(Latitude=input_lat, Longitude=input_lon)
         FAO_yield = float(df.loc[(df['Area'] == country) & (df['Year'] == 2022) & (df['Item'] == crop), 'Value'].iloc[0])
@@ -72,6 +72,7 @@ class calcey:
         self.root.mainloop()
 
     def country_from_coordinates(self, Latitude: float, Longitude: float):
+        """Gets the name of the country and region from the UI, and uses coco convert in case the language is not English."""
         lat_str = str(Latitude)
         lon_str = str(Longitude)
         geolocator = Nominatim(user_agent="GetLoc")
@@ -87,6 +88,7 @@ class calcey:
     
     
     def ISO3_country_from_coordinates(self, Latitude: float,Longitude:float):
+        """This converts the output "country" from the country_from_coordinates function to ISO3 format."""
         country = self.country_from_coordinates(Latitude, Longitude)
         country_ISO3 = coco.convert(country,to='ISO3')
         print(country, country_ISO3)
@@ -97,6 +99,9 @@ class calcey:
     
     
     def get_crop_mapping_file(self, sheet_name: str):
+        """This loads the crop mapping file that maps fertilizer use based on the crop chosen in the UI to the background database, but if that crop is not in the fertilizer database, it will choose the next most relevant crop in the database, defined in the mapping file. 
+        The file also maps pesticides in a similar way as was done for fertilizers.
+        This file also maps the UI flows to ecoinvent fertilizer names, regions, uuids, sphere type and database."""
         crop_mapping_df = pd.read_excel("../data/Mapping_data_Calcey.xlsx", sheet_name=sheet_name, index_col = 0)
         return crop_mapping_df
     
@@ -114,6 +119,7 @@ class calcey:
     
         
     def country_fertilizer_proxy_location(self, Latitude: float, Longitude: float):
+        """FInds a proxy for the closest country to the UI coordinates, if the current country cannot be found in the background databases."""
         country_ISO3 = self.ISO3_country_from_coordinates(Latitude, Longitude)
         country_mapping_file = pd.read_excel("../data/Fertilizer_mapping_country.xlsx", sheet_name = "Mapping_nearest_neighbor", index_col = 0)
         country_proxy_ISO3 = country_mapping_file.loc[country_ISO3,"iso3_nearest"][0]
@@ -125,7 +131,7 @@ class calcey:
     
     def get_background_data_fert(self, Latitude: float, Longitude: float, crop:str):
         """
-        Latitude, Longitude, crop
+        Gets background data for Latitude, Longitude, crop.
         """
         # get fetilizer data
         df_amount_fert_crop_country = pd.read_excel("../data/Ludemann2022_fertilizer_Country_clean_ISO3.xlsx")
@@ -150,7 +156,7 @@ class calcey:
     
     
     def get_background_data_yield(self, input_lat: float, input_lon: float, crop: str):
-        """Get yield data"""
+        """Gets yield data from background databases for the UI chosen coordinates and crop."""
         df = pd.read_csv("../data/FAOSTAT_data_yield.csv")
         country = self.country_from_coordinates(Latitude=input_lat, Longitude=input_lon)
         FAO_yield = float(df.loc[(df['Area'] == country) & (df['Year'] == 2022) & (df['Item'] == crop), 'Value'].iloc[0])
@@ -158,6 +164,7 @@ class calcey:
     
     
     def get_background_data_water(self, input_lat: float, input_lon: float, crop: str):
+        """Gets water use data from the background water use database for the UI chosen coordinates and crop."""
         path_to_folder = "../data/NC_background_water/"
     
         crop_water = self.crop_proxy_excelwithsheet(crop=crop, sheet_name="Mapping_water")
@@ -273,6 +280,7 @@ class calcey:
 
 
     def create_final_dataframe(self, yield_data, fert_data, water_data, pest_data, pest_total):
+        """Creates the final dataframe for the crop product that consists of the yield, fertilizer use, water use and pesticide use."""
         # yield data
         yield_in_kgperha = yield_data / 10
 
@@ -327,6 +335,7 @@ class calcey:
 
 
     def dataframe_exchanges(self, latitude, longitude, crop, yield_ = None, n_fert_input=None, p2o5_fert_input=None, k2o_fert_input=None):
+        """Creates the dataframe of exchanges for the crop product, based on the UI provided data, i.e., coordinates, crop type and yield."""
         self.mapping_flows_uuid = pd.read_excel("../data/Mapping_data_Calcey.xlsx", sheet_name = "Mapping_flows_ecoinvent", index_col =0) ## adjust path before "Mapping_data_Calcey.xlsx"
         all_inputs = list(set(self.mapping_flows_uuid.index))
         all_inputs = [x for x in all_inputs if type(x) != float]
@@ -370,11 +379,13 @@ class calcey:
             self.df_output = self.df_output.fillna(0)
 
     def generate_edges_to_product(self):
+        """Generates the edges for all the exchanges built in the function above, dataframe_exchanges."""
         for name in list(self.mapping_flows_uuid.index):
             self.create_edge(self.df_output.loc[name,"Amount"], name) ## add self.
 
 
     def create_edge(self, amount, name):
+            """Generates the edge for the crop product itself, where the amount will be the functional unit of 1 kg."""
         #mapping_flows_uuid = mapping_flows_uuid
             self.product.new_edge(
                amount=amount, 
@@ -383,17 +394,20 @@ class calcey:
            ).save()
         
     def code_node_ei(self, input_name,mapping_flows_uuid):
+        """Generates the nodes for inputs (input_name) that are matched with ecoinvent processes using the uuid of the process."""
         uuid = self.mapping_flows_uuid.loc[input_name,"uuid"]
         name_database = mapping_flows_uuid.loc[input_name,"database"]
         return(name_database,uuid)
 
     
     def type_flow_node_ei(self, input_name,mapping_flows_uuid):
+        """Defines the flow type of each node, either technosphere of biosphere."""
         type_ = self.mapping_flows_uuid.loc[input_name,"type"]
         return type_
 
     
     def create_main_process(self, name_database,Latitude,Longitude,crop):
+        """Creates the main crop product node that we are interested in calculating the impacts."""
         country = self.country_from_coordinates(Latitude,Longitude)
         name = "Production of "+crop+" in "+country
         data = {
@@ -411,6 +425,23 @@ class calcey:
 
     
     def brightway_checkin(self):
+        """
+        Set up and register a Brightway2 database for crop data.
+
+        This method sets up a Brightway2 database with a specified name ("Calcey_crop_database").
+        If a database with the specified name already exists, it deletes the existing database
+        and creates a new one. The new database is then registered for further use.
+
+        Attributes:
+        -----------
+        name_database : str
+            The name of the Brightway2 database to be set up and registered.
+
+        Raises:
+        -------
+        ValueError
+            If the database cannot be registered.
+        """
         # bi.bw2setup()
         self.name_database = "Calcey_crop_database"
         if self.name_database in list(bd.databases):
@@ -420,6 +451,7 @@ class calcey:
 
 
     def calculate_LCA_results(self):
+        """Calculates the final LCA results using the ReCiPe method for only the climate change indicator of the crop product."""
         lca = bc.LCA(
             demand={self.product: 1},
             method = ('ReCiPe 2016 v1.03, midpoint (H) no LT',
